@@ -1,0 +1,17 @@
+    {
+        "mcp": {
+            "servers": {
+                "mcp-image-server": {
+                    "type": "stdio",
+                    "command": "npx",
+                    "args": [
+                        "-y",
+                        "@ricardopera/mcp-image-server@latest"
+                    ],
+                    "env": {
+                        "OPENAI_API_KEY": "API_KEY_PLACEHOLDER"
+                    }
+                }
+            }
+        }
+    }

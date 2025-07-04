@@ -1,0 +1,31 @@
+{
+  "name": "mcp-image-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "mcp-image-server": "./build/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "files": [
+    "build"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "O MCP Image Server é um servidor MCP desenvolvido em TypeScript para gerar imagens customizadas e ícones prontos para projetos, utilizando IA (inicialmente DALL-E) e entregando arquivos nos formatos .png, .svg, .ico, entre outros. Pronto para uso via npx e integração com MCP Client.",
+  "dependencies": {
+    "@chatmcp/sdk": "^1.0.6",
+    "@modelcontextprotocol/sdk": "^1.15.0",
+    "png-to-ico": "^2.1.8",
+    "sharp": "^0.34.2",
+    "zod": "^3.25.74"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "typescript": "^5.8.3"
+  }
+}
