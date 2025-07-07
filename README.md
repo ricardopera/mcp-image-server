@@ -29,7 +29,29 @@ Servidor MCP em TypeScript para geração de imagens e ícones customizados via 
 - `tsconfig.json`: Configuração TypeScript
 - `sample_config.json`: Exemplo de configuração MCP Client
 
- 
+## Como configurar o MCP Client para usar este servidor
+
+Adicione a seguinte configuração ao seu arquivo de servidores MCP (exemplo para `sample_config.json`):
+
+```json
+{
+    "servers": {
+        "image-server": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@ricardopera/mcp-image-server@latest"
+            ],
+            "env": {
+                "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY_HERE"
+            }
+        }
+    }
+}
+```
+
+Isso permite rodar o servidor de imagens diretamente via npx, sem instalação prévia, e já define a variável de ambiente necessária para autenticação na OpenAI.
 
 ## Como rodar localmente
 
