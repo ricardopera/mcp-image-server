@@ -9,7 +9,7 @@ import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 
 // Function to generate PNG image via GPT Image 1 (OpenAI)
-async function generateImageGptImage1(prompt: string, size: "1024x1024" | "1536x1024" | "1024x1536", transparency: "transparent" | "opaque"): Promise<Buffer> {
+async function generateImageGptImage1(prompt: string, size: "1024x1024" | "1536x1024" | "1024x1536", background: "transparent" | "opaque"): Promise<Buffer> {
   if (!OPENAI_API_KEY || OPENAI_API_KEY.length < 10) {
     throw new Error("OPENAI_API_KEY not defined or invalid. Set the environment variable correctly.");
   }
@@ -26,7 +26,7 @@ async function generateImageGptImage1(prompt: string, size: "1024x1024" | "1536x
       size,
       quality: "low",
       moderation: "low",
-      transparency,
+      background,
       response_format: "b64_json"
     })
   });
@@ -84,7 +84,7 @@ server.registerTool(
       prompt: z.string().describe("Textual prompt describing the desired image (e.g., 'minimalist rocket icon transparent background')"),
       format: z.enum(["png", "svg", "ico"]).default("png").describe("Output format of the image: png, svg, or ico"),
       size: z.enum(["1024x1024", "1536x1024", "1024x1536"]).default("1024x1024").describe("Image size: 1024×1024 (square), 1536×1024 (landscape), or 1024×1536 (portrait)"),
-      transparency: z.enum(["transparent", "opaque"]).default("transparent").describe("Background transparency: 'transparent' or 'opaque'"),
+      background: z.enum(["transparent", "opaque"]).default("transparent").describe("Background type: 'transparent' or 'opaque'"),
       fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
       directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
@@ -92,9 +92,9 @@ server.registerTool(
       usage: "Use this tool to generate custom images and icons for your project using GPT Image 1. The prompt should be detailed for better results. The format defines the extension of the generated file. Quality is set to 'low' and moderation to 'low' for fast generation."
     }
   },
-  async ({ prompt, format, size, transparency, fileName, directory }) => {
+  async ({ prompt, format, size, background, fileName, directory }) => {
     try {
-      const pngBuffer = await generateImageGptImage1(prompt, size, transparency);
+      const pngBuffer = await generateImageGptImage1(prompt, size, background);
       const { buffer, mimeType, ext } = await convertImage(pngBuffer, format);
       const dirPath = path.resolve(directory);
       await fs.promises.mkdir(dirPath, { recursive: true });
@@ -143,7 +143,7 @@ server.registerTool(
     inputSchema: {
       prompt: z.string().describe("Textual prompt describing the desired favicon (e.g., 'yellow star favicon transparent background')"),
       size: z.enum(["1024x1024", "1536x1024", "1024x1536"]).default("1024x1024").describe("Image size: 1024×1024 (square), 1536×1024 (landscape), or 1024×1536 (portrait)"),
-      transparency: z.enum(["transparent", "opaque"]).default("transparent").describe("Background transparency: 'transparent' or 'opaque'"),
+      background: z.enum(["transparent", "opaque"]).default("transparent").describe("Background type: 'transparent' or 'opaque'"),
       fileName: z.string().default("favicon").describe("Name of the file to be saved (without extension)"),
       directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
@@ -151,9 +151,9 @@ server.registerTool(
       usage: "Use this tool to generate a favicon.ico ready for websites and applications using GPT Image 1."
     }
   },
-  async ({ prompt, size, transparency, fileName, directory }) => {
+  async ({ prompt, size, background, fileName, directory }) => {
     try {
-      const pngBuffer = await generateImageGptImage1(prompt, size, transparency);
+      const pngBuffer = await generateImageGptImage1(prompt, size, background);
       const { buffer, mimeType, ext } = await convertImage(pngBuffer, "ico");
       const dirPath = path.resolve(directory);
       await fs.promises.mkdir(dirPath, { recursive: true });
@@ -190,7 +190,7 @@ server.registerTool(
     inputSchema: {
       prompt: z.string().describe("Textual prompt describing the desired image for SVG"),
       size: z.enum(["1024x1024", "1536x1024", "1024x1536"]).default("1024x1024").describe("Image size: 1024×1024 (square), 1536×1024 (landscape), or 1024×1536 (portrait)"),
-      transparency: z.enum(["transparent", "opaque"]).default("transparent").describe("Background transparency: 'transparent' or 'opaque'"),
+      background: z.enum(["transparent", "opaque"]).default("transparent").describe("Background type: 'transparent' or 'opaque'"),
       fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
       directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
@@ -198,9 +198,9 @@ server.registerTool(
       usage: "Use this tool to generate SVGs ready for the web, with the embedded AI image using GPT Image 1."
     }
   },
-  async ({ prompt, size, transparency, fileName, directory }) => {
+  async ({ prompt, size, background, fileName, directory }) => {
     try {
-      const pngBuffer = await generateImageGptImage1(prompt, size, transparency);
+      const pngBuffer = await generateImageGptImage1(prompt, size, background);
       const { buffer, mimeType, ext } = await convertImage(pngBuffer, "svg");
       const dirPath = path.resolve(directory);
       await fs.promises.mkdir(dirPath, { recursive: true });
@@ -244,27 +244,27 @@ server.registerResource(
         text: JSON.stringify({
           "generate-image": [
             {
-              arguments: { prompt: "minimalist rocket icon transparent background", format: "png", size: "1024x1024", transparency: "transparent" },
+              arguments: { prompt: "minimalist rocket icon transparent background", format: "png", size: "1024x1024", background: "transparent" },
               description: "Generates a rocket icon in PNG with square format and transparent background."
             },
             {
-              arguments: { prompt: "golden star icon", format: "ico", size: "1024x1024", transparency: "opaque" },
+              arguments: { prompt: "golden star icon", format: "ico", size: "1024x1024", background: "opaque" },
               description: "Generates a golden star icon in .ico format with opaque background."
             },
             {
-              arguments: { prompt: "blue circular logo with letter A", format: "svg", size: "1536x1024", transparency: "transparent" },
+              arguments: { prompt: "blue circular logo with letter A", format: "svg", size: "1536x1024", background: "transparent" },
               description: "Generates a blue circular logo with letter A in SVG with landscape format."
             }
           ],
           "generate-favicon": [
             {
-              arguments: { prompt: "yellow star favicon transparent background", size: "1024x1024", transparency: "transparent" },
+              arguments: { prompt: "yellow star favicon transparent background", size: "1024x1024", background: "transparent" },
               description: "Generates a yellow star favicon with transparent background."
             }
           ],
           "generate-svg": [
             {
-              arguments: { prompt: "red heart icon", size: "1024x1536", transparency: "opaque" },
+              arguments: { prompt: "red heart icon", size: "1024x1536", background: "opaque" },
               description: "Generates an SVG with a red heart icon in portrait format."
             }
           ]
