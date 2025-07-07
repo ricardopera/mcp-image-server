@@ -198,7 +198,8 @@ server.registerTool(
   }
 );
 
-// Tool: Generate SVG with embedded image
+// Tool: Generate SVG with embedded image (temporarily disabled)
+/*
 server.registerTool(
   "generate-svg",
   {
@@ -244,6 +245,7 @@ server.registerTool(
     }
   }
 );
+*/
 
 // Resource: Tool usage examples
 server.registerResource(

@@ -187,50 +187,54 @@ server.registerTool("generate-favicon", {
         };
     }
 });
-// Tool: Generate SVG with embedded image
-server.registerTool("generate-svg", {
+// Tool: Generate SVG with embedded image (temporarily disabled)
+/*
+server.registerTool(
+  "generate-svg",
+  {
     title: "Generate SVG with AI Image",
     description: "Generates an SVG file with the embedded AI image (base64) using GPT Image 1.",
     inputSchema: {
-        prompt: z.string().describe("Textual prompt describing the desired image for SVG"),
-        size: z.enum(["1024x1024", "1536x1024", "1024x1536"]).default("1024x1024").describe("Image size: 1024×1024 (square), 1536×1024 (landscape), or 1024×1536 (portrait)"),
-        background: z.enum(["transparent", "opaque"]).default("transparent").describe("Background type: 'transparent' or 'opaque'"),
-        fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
-        directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
+      prompt: z.string().describe("Textual prompt describing the desired image for SVG"),
+      size: z.enum(["1024x1024", "1536x1024", "1024x1536"]).default("1024x1024").describe("Image size: 1024×1024 (square), 1536×1024 (landscape), or 1024×1536 (portrait)"),
+      background: z.enum(["transparent", "opaque"]).default("transparent").describe("Background type: 'transparent' or 'opaque'"),
+      fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
+      directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
     annotations: {
-        usage: "Use this tool to generate SVGs ready for the web, with the embedded AI image using GPT Image 1."
+      usage: "Use this tool to generate SVGs ready for the web, with the embedded AI image using GPT Image 1."
     }
-}, async ({ prompt, size, background, fileName, directory }) => {
+  },
+  async ({ prompt, size, background, fileName, directory }) => {
     try {
-        const pngBuffer = await generateImageGptImage1(prompt, size, background);
-        const { buffer, mimeType, ext } = await convertImage(pngBuffer, "svg");
-        const dirPath = path.resolve(directory);
-        await fs.promises.mkdir(dirPath, { recursive: true });
-        const filePath = path.join(dirPath, `${fileName}.svg`);
-        await fs.promises.writeFile(filePath, buffer);
-        return {
-            content: [
-                {
-                    type: "text",
-                    text: buffer.toString("utf-8"),
-                    mimeType
-                }
-            ]
-        };
+      const pngBuffer = await generateImageGptImage1(prompt, size, background);
+      const { buffer, mimeType, ext } = await convertImage(pngBuffer, "svg");
+      const dirPath = path.resolve(directory);
+      await fs.promises.mkdir(dirPath, { recursive: true });
+      const filePath = path.join(dirPath, `${fileName}.svg`);
+      await fs.promises.writeFile(filePath, buffer);
+      return {
+        content: [
+          {
+            type: "text",
+            text: buffer.toString("utf-8"),
+            mimeType
+          }
+        ]
+      };
+    } catch (err) {
+      let msg = "Error generating SVG";
+      if (err instanceof Error) msg += ": " + err.message;
+      return {
+        content: [
+          { type: "text", text: msg }
+        ],
+        isError: true
+      };
     }
-    catch (err) {
-        let msg = "Error generating SVG";
-        if (err instanceof Error)
-            msg += ": " + err.message;
-        return {
-            content: [
-                { type: "text", text: msg }
-            ],
-            isError: true
-        };
-    }
-});
+  }
+);
+*/
 // Resource: Tool usage examples
 server.registerResource("tool-examples", "resource://tool-examples", {
     title: "Tool Usage Examples",

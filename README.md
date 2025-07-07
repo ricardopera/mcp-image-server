@@ -274,25 +274,12 @@ Generates a custom favicon.ico from a textual prompt.
 }
 ```
 
-### `generate-svg`
 
-Generates an SVG file with the embedded AI image (base64).
+### `generate-svg` (temporariamente indisponível)
 
-**Parameters:**
+> ⚠️ A ferramenta de geração de SVG está temporariamente desabilitada devido a questões técnicas relacionadas ao processamento do conteúdo SVG como texto. O recurso será reativado em uma versão futura, assim que for possível garantir que SVGs sejam tratados apenas como arquivos de imagem.
 
-- `prompt` (string): textual description of the desired image
-- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
-- `background` ("transparent" | "opaque"): background type (default: "transparent")
-
-**Example:**
-
-```json
-{
-  "prompt": "red heart icon",
-  "size": "1024x1536",
-  "background": "opaque"
-}
-```
+Enquanto isso, utilize os formatos PNG ou ICO para geração de imagens.
 
 ## Resources
 
