@@ -1,10 +1,10 @@
 {
   "name": "@ricardopera/mcp-image-server",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "mcp-image-server": "./build/index.js"
+    "mcp-image-server": "build/index.js"
   },
   "scripts": {
     "test": "node --test || jest",
