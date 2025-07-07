@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "node --test || jest",
-    "build": "tsc && (echo #!/usr/bin/env node> build/index.js.tmp && type build/index.js >> build/index.js.tmp && move /Y build/index.js.tmp build/index.js) && chmod 755 build/index.js",
+    "build": "tsc && shx echo '#!/usr/bin/env node' > build/index.js.tmp && shx cat build/index.js >> build/index.js.tmp && shx mv build/index.js.tmp build/index.js && shx chmod 755 build/index.js",
     "start": "node build/index.js"
   },
   "repository": {
@@ -37,6 +37,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.10",
     "jest": "^30.0.4",
+    "shx": "^0.4.0",
     "typescript": "^5.8.3"
   }
 }
