@@ -124,7 +124,7 @@ Prompt used:
 
 Result:
 
-![Minimalist rocket icon](examples/icone-foguete.png)
+![Minimalist rocket icon](examples/rocket-icon.png)
 
 ---
 
@@ -145,7 +145,7 @@ Prompt used:
 
 Result:
 
-![Blue circular logo with letter A](examples/logo-azul-letra-a.svg)
+![Blue circular logo with letter A](examples/blue-logo-letter-a.svg)
 
 ---
 
@@ -166,7 +166,7 @@ Prompt used:
 
 Result:
 
-![Golden star icon](examples/estrela-dourada.ico)
+![Golden star icon](examples/golden-star.ico)
 
 ---
 
@@ -186,7 +186,7 @@ Prompt used:
 
 Result:
 
-![Yellow star favicon](examples/favicon-estrela-amarela.ico)
+![Yellow star favicon](examples/yellow-star-favicon.ico)
 
 ---
 
@@ -206,7 +206,7 @@ Prompt used:
 
 Result:
 
-![Red heart icon](examples/icone-coracao-vermelho.svg)
+![Red heart icon](examples/red-heart-icon.svg)
 
 ---
 
@@ -336,7 +336,7 @@ Prompt used:
 
 Result:
 
-![Friendly robot avatar](examples/avatar-robo-simpatico.png)
+![Friendly robot avatar](examples/friendly-robot-avatar.png)
 
 ---
 
@@ -357,7 +357,7 @@ Prompt used:
 
 Result:
 
-![Futuristic landscape with mountains](examples/paisagem-futurista.png)
+![Futuristic landscape with mountains](examples/futuristic-landscape.png)
 
 ---
 
