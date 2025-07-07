@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm 
+      - run: npm test
       - name: Set env
         run: |
           VERSION="${GITHUB_REF##refs/*/}"
