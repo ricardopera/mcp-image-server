@@ -16,6 +16,25 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - run: npm 
+      - name: Set env
+        run: |
+          VERSION="${GITHUB_REF##refs/*/}"
+          # Remove 'v' prefix if it exists
+          VERSION="${VERSION#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Set package version
+        run: |
+          echo $(jq --arg v "${{ env.VERSION }}" '(.version) = $v' package.json) > package.json
+
+      - name: Update version in source file
+        run: |
+          sed -i "s/version: \"[0-9]*\.[0-9]*\.[0-9]*\"/version: \"${{ env.VERSION }}\"/" src/index.ts
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
 
   publish-npm:
     needs: build

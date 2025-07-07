@@ -1,0 +1,36 @@
+# Node
+node_modules/
+
+# Build
+build/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+
+# VSCode
+.vscode/
+
+# Test coverage
+coverage/
+
+# Outros arquivos temporários
+*.tmp
+*.swp
+*.swo
+
+# # Exemplos de imagens geradas
+# examples/*.png
+# examples/*.ico
+# examples/*.svg
