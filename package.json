@@ -1,6 +1,6 @@
 {
   "name": "@ricardopera/mcp-image-server",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "main": "index.js",
   "type": "module",
   "bin": {
