@@ -25,8 +25,7 @@ async function generateImageGptImage1(prompt, size, background) {
             size,
             quality: "low",
             moderation: "low",
-            background,
-            response_format: "b64_json"
+            background
         })
     });
     if (!response.ok) {
@@ -41,10 +40,27 @@ async function generateImageGptImage1(prompt, size, background) {
         throw new Error(msg);
     }
     const data = await response.json();
-    if (!data || typeof data !== 'object' || !('data' in data) || !Array.isArray(data.data) || !data.data[0] || !('b64_json' in data.data[0])) {
+    if (!data || typeof data !== 'object' || !('data' in data) || !Array.isArray(data.data) || !data.data[0]) {
         throw new Error("Unexpected response from GPT Image 1 API");
     }
-    const b64 = data.data[0].b64_json;
+    // GPT Image 1 might return different formats, handle both b64_json and url
+    const imageData = data.data[0];
+    let b64;
+    if ('b64_json' in imageData) {
+        b64 = imageData.b64_json;
+    }
+    else if ('url' in imageData) {
+        // If we get a URL, fetch the image and convert to base64
+        const imageResponse = await fetch(imageData.url);
+        if (!imageResponse.ok) {
+            throw new Error(`Failed to fetch image from URL: ${imageResponse.status}`);
+        }
+        const imageBuffer = await imageResponse.arrayBuffer();
+        b64 = Buffer.from(imageBuffer).toString('base64');
+    }
+    else {
+        throw new Error("No image data found in response");
+    }
     return Buffer.from(b64, "base64");
 }
 // Function to convert PNG to other formats (PNG, SVG, ICO)
