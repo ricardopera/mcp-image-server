@@ -1,5 +1,5 @@
 {
-  "name": "mcp-image-server",
+  "name": "@ricardopera/mcp-image-server",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -10,13 +10,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricardopera/mcp-image-server.git"
+  },
   "files": [
     "build"
   ],
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ricardopera",
+  "license": "MIT",
   "description": "O MCP Image Server é um servidor MCP desenvolvido em TypeScript para gerar imagens customizadas e ícones prontos para projetos, utilizando IA (inicialmente DALL-E) e entregando arquivos nos formatos .png, .svg, .ico, entre outros. Pronto para uso via npx e integração com MCP Client.",
+  "homepage": "https://github.com/ricardopera/mcp-image-server#readme",
+  "bugs": {
+    "url": "https://github.com/ricardopera/mcp-image-server/issues"
+  },
   "dependencies": {
     "@chatmcp/sdk": "^1.0.6",
     "@modelcontextprotocol/sdk": "^1.15.0",
