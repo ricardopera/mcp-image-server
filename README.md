@@ -2,12 +2,15 @@
 
 ![Banner MCP Image Server](examples/banner-mcp-image-server.png)
 
-MCP server in TypeScript for generating custom images and icons via AI (DALL-E 3), delivering files in `.png`, `.svg`, `.ico`, and other formats. Compatible with MCP Client, ready for integration by MCP agents, and for publishing on [https://mcp.so/](https://mcp.so/). Cross-platform, executable via `npx`.
+A TypeScript-based MCP server for generating custom images and icons using AI (GPT Image 1). It supports output formats including .png, .svg, .ico, and others. Designed for seamless integration with Vibe Coding, enabling on-demand visual asset creation for your projects. Cross-platform, executable via `npx`.
 
 ## Features
 
-- Custom image generation via DALL-E 3 (OpenAI)
+- Custom image generation via GPT Image 1 (OpenAI)
 - Delivers files in `.png`, `.svg` (embedded base64 image), and `.ico` (real conversion)
+- Configurable image sizes: 1024×1024 (square), 1536×1024 (landscape), or 1024×1536 (portrait)
+- Background transparency control: 'transparent' or 'opaque'
+- Quality set to 'low' and moderation to 'low' for fast generation
 - MCP tools documented with usage examples accessible via resource
 - Resource for querying supported formats
 - Ready for integration with MCP Client, agents, and Vibe Coding flows
@@ -89,7 +92,7 @@ This allows you to run the image server directly via npx, with no prior installa
 
 - [x] Initial project structure
 - [x] MCP server implementation
-- [x] Real DALL-E 3 integration
+- [x] Real GPT Image 1 integration
 - [x] Conversion and delivery of files in `.png`, `.svg`, `.ico` formats
 - [x] MCP tools documented and annotated
 - [x] Usage examples resource (`resource://tool-examples`)
@@ -112,6 +115,8 @@ Prompt used:
 {
   "prompt": "minimalist rocket icon transparent background",
   "format": "png",
+  "size": "1024x1024",
+  "transparency": "transparent",
   "fileName": "rocket-icon",
   "directory": "examples"
 }
@@ -131,6 +136,8 @@ Prompt used:
 {
   "prompt": "blue circular logo with letter A",
   "format": "svg",
+  "size": "1536x1024",
+  "transparency": "transparent",
   "fileName": "blue-logo-letter-a",
   "directory": "examples"
 }
@@ -150,6 +157,8 @@ Prompt used:
 {
   "prompt": "golden star icon",
   "format": "ico",
+  "size": "1024x1024",
+  "transparency": "opaque",
   "fileName": "golden-star",
   "directory": "examples"
 }
@@ -168,6 +177,8 @@ Prompt used:
 ```json
 {
   "prompt": "yellow star favicon transparent background",
+  "size": "1024x1024",
+  "transparency": "transparent",
   "fileName": "yellow-star-favicon",
   "directory": "examples"
 }
@@ -186,6 +197,8 @@ Prompt used:
 ```json
 {
   "prompt": "red heart icon",
+  "size": "1024x1536",
+  "transparency": "opaque",
   "fileName": "red-heart-icon",
   "directory": "examples"
 }
@@ -203,33 +216,41 @@ These examples demonstrate the server's flexibility to generate and save custom 
 
 ### `generate-image`
 
-Generates a custom image using AI (DALL-E 3) and delivers it in the requested format.
+Generates a custom image using AI (GPT Image 1) and delivers it in the requested format.
 
 **Parameters:**
 
 - `prompt` (string): textual description of the desired image
 - `format` ("png" | "svg" | "ico"): output format (default: "png")
+- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
+- `transparency` ("transparent" | "opaque"): background transparency (default: "transparent")
 
 **Example:**
 
 ```json
 {
   "prompt": "minimalist rocket icon transparent background",
-  "format": "png"
+  "format": "png",
+  "size": "1024x1024",
+  "transparency": "transparent"
 }
 ```
 
 ```json
 {
   "prompt": "blue circular logo with letter A",
-  "format": "svg"
+  "format": "svg",
+  "size": "1536x1024",
+  "transparency": "transparent"
 }
 ```
 
 ```json
 {
   "prompt": "golden star icon",
-  "format": "ico"
+  "format": "ico",
+  "size": "1024x1024",
+  "transparency": "opaque"
 }
 ```
 
@@ -240,12 +261,16 @@ Generates a custom favicon.ico from a textual prompt.
 **Parameters:**
 
 - `prompt` (string): textual description of the favicon
+- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
+- `transparency` ("transparent" | "opaque"): background transparency (default: "transparent")
 
 **Example:**
 
 ```json
 {
-  "prompt": "yellow star favicon transparent background"
+  "prompt": "yellow star favicon transparent background",
+  "size": "1024x1024",
+  "transparency": "transparent"
 }
 ```
 
@@ -256,12 +281,16 @@ Generates an SVG file with the embedded AI image (base64).
 **Parameters:**
 
 - `prompt` (string): textual description of the desired image
+- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
+- `transparency` ("transparent" | "opaque"): background transparency (default: "transparent")
 
 **Example:**
 
 ```json
 {
-  "prompt": "red heart icon"
+  "prompt": "red heart icon",
+  "size": "1024x1536",
+  "transparency": "opaque"
 }
 ```
 
@@ -277,7 +306,7 @@ Generates an SVG file with the embedded AI image (base64).
 ## Troubleshooting
 
 - **Error OPENAI_API_KEY not defined or invalid**: correctly set the environment variable before running.
-- **Error generating DALL-E image**: check your key, connection, and OpenAI limits.
+- **Error generating GPT Image 1 image**: check your key, connection, and OpenAI limits.
 - **Permission issues on Windows**: the project is cross-platform, but if permission errors occur, run the terminal as administrator.
 
 ---
@@ -298,6 +327,8 @@ Prompt used:
 {
   "prompt": "friendly robot avatar, white background, cartoon style, soft colors",
   "format": "png",
+  "size": "1024x1024",
+  "transparency": "opaque",
   "fileName": "friendly-robot-avatar",
   "directory": "examples"
 }
@@ -317,6 +348,8 @@ Prompt used:
 {
   "prompt": "futuristic landscape with mountains and starry sky, digital art, transparent background",
   "format": "png",
+  "size": "1536x1024",
+  "transparency": "transparent",
   "fileName": "futuristic-landscape",
   "directory": "examples"
 }
@@ -334,12 +367,14 @@ These advanced examples show how the MCP Image Server can be used to generate ev
 
 ### generate-image
 
-Generates a custom image using AI (DALL-E 3) and saves it in the requested format.
+Generates a custom image using AI (GPT Image 1) and saves it in the requested format.
 
 **Required Parameters:**
 
 - `prompt` (string): textual description of the desired image
 - `format` ("png" | "svg" | "ico"): output format (default: "png")
+- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
+- `transparency` ("transparent" | "opaque"): background transparency (default: "transparent")
 - `fileName` (string): name of the file to be saved (without extension)
 - `directory` (string): full path of the directory where the file will be saved (must be formatted according to the operating system, e.g., `C:\Users\user\project\folder` on Windows or `/home/user/project/folder` on Linux/Mac)
 
@@ -351,6 +386,8 @@ Generates a custom image using AI (DALL-E 3) and saves it in the requested forma
 {
   "prompt": "minimalist rocket icon transparent background",
   "format": "png",
+  "size": "1024x1024",
+  "transparency": "transparent",
   "fileName": "rocket-icon",
   "directory": "c:\\Users\\ricar\\Desktop\\projetos\\mcp-image-server\\examples"
 }
@@ -362,6 +399,8 @@ Generates a custom image using AI (DALL-E 3) and saves it in the requested forma
 {
   "prompt": "minimalist rocket icon transparent background",
   "format": "png",
+  "size": "1024x1024",
+  "transparency": "transparent",
   "fileName": "rocket-icon",
   "directory": "/home/user/projects/mcp-image-server/examples"
 }
@@ -374,6 +413,8 @@ Generates a custom favicon.ico from a textual prompt.
 **Required Parameters:**
 
 - `prompt` (string): textual description of the favicon
+- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
+- `transparency` ("transparent" | "opaque"): background transparency (default: "transparent")
 - `fileName` (string): name of the file to be saved (without extension)
 - `directory` (string): full path of the directory where the file will be saved (operating system format)
 
@@ -382,6 +423,8 @@ Generates a custom favicon.ico from a textual prompt.
 ```json
 {
   "prompt": "yellow star favicon transparent background",
+  "size": "1024x1024",
+  "transparency": "transparent",
   "fileName": "yellow-star-favicon",
   "directory": "c:\\Users\\ricar\\Desktop\\projetos\\mcp-image-server\\examples"
 }
@@ -394,6 +437,8 @@ Generates an SVG file with the embedded AI image (base64).
 **Required Parameters:**
 
 - `prompt` (string): textual description of the desired image
+- `size` ("1024x1024" | "1536x1024" | "1024x1536"): image size (default: "1024x1024")
+- `transparency` ("transparent" | "opaque"): background transparency (default: "transparent")
 - `fileName` (string): name of the file to be saved (without extension)
 - `directory` (string): full path of the directory where the file will be saved (operating system format)
 
@@ -402,6 +447,8 @@ Generates an SVG file with the embedded AI image (base64).
 ```json
 {
   "prompt": "red heart icon",
+  "size": "1024x1536",
+  "transparency": "opaque",
   "fileName": "red-heart-icon",
   "directory": "/home/user/projects/mcp-image-server/examples"
 }
@@ -438,11 +485,13 @@ MCP (Model Context Protocol) tools must follow the international standard for de
 server.registerTool(
   "generate-image",
   {
-    title: "Generate Image with DALL-E",
-    description: "Generates a custom image using AI (DALL-E 3) and delivers it in the requested format (.png, .svg, .ico).",
+    title: "Generate Image with GPT Image 1",
+    description: "Generates a custom image using AI (GPT Image 1) and delivers it in the requested format (.png, .svg, .ico).",
     inputSchema: {
       prompt: z.string().describe("Textual prompt describing the desired image"),
       format: z.enum(["png", "svg", "ico"]).default("png").describe("Output format of the image"),
+      size: z.enum(["1024x1024", "1536x1024", "1024x1536"]).default("1024x1024").describe("Image size"),
+      transparency: z.enum(["transparent", "opaque"]).default("transparent").describe("Background transparency"),
       fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
       directory: z.string().default("./output").describe("Directory where the file will be saved")
     },
@@ -450,7 +499,7 @@ server.registerTool(
       usage: "Use this tool to generate custom images and icons for your project. The prompt should be detailed for better results. The format defines the extension of the generated file."
     }
   },
-  async ({ prompt, format, fileName, directory }) => { /* ... */ }
+  async ({ prompt, format, size, transparency, fileName, directory }) => { /* ... */ }
 );
 ```
 
