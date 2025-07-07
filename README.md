@@ -1,37 +1,30 @@
-
-<p align="center">
-  <img src="examples/banner-mcp-image-server.png" alt="Banner MCP Image Server" style="max-width: 100%; min-width: 240px;" />
-</p>
-
 # MCP Image Server
 
-Servidor MCP em TypeScript para geração de imagens e ícones customizados via IA (DALL-E 3), entregando arquivos nos formatos `.png`, `.svg`, `.ico` e outros. Compatível com MCP Client, pronto para integração por agentes MCP e publicação no [https://mcp.so/](https://mcp.so/). Multiplataforma, executável via `npx`.
+![Banner MCP Image Server](examples/banner-mcp-image-server.png)
 
- 
+MCP server in TypeScript for generating custom images and icons via AI (DALL-E 3), delivering files in `.png`, `.svg`, `.ico`, and other formats. Compatible with MCP Client, ready for integration by MCP agents, and for publishing on [https://mcp.so/](https://mcp.so/). Cross-platform, executable via `npx`.
 
-## Funcionalidades
+## Features
 
-- Geração de imagens customizadas via DALL-E 3 (OpenAI)
-- Entrega de arquivos nos formatos `.png`, `.svg` (imagem embutida base64) e `.ico` (conversão real)
-- Ferramentas MCP documentadas e com exemplos de uso acessíveis via resource
-- Resource para consulta de formatos suportados
-- Pronto para integração com MCP Client, agentes e fluxos Vibe Coding
-- Multiplataforma (Windows/Linux/Mac), pronto para rodar via `npx`
+- Custom image generation via DALL-E 3 (OpenAI)
+- Delivers files in `.png`, `.svg` (embedded base64 image), and `.ico` (real conversion)
+- MCP tools documented with usage examples accessible via resource
+- Resource for querying supported formats
+- Ready for integration with MCP Client, agents, and Vibe Coding flows
+- Cross-platform (Windows/Linux/Mac), ready to run via `npx`
 
- 
+## Project Structure
 
-## Estrutura do Projeto
+- `src/index.ts`: Main implementation of the MCP server, tools, and resources
+- `package.json`: Project configuration, dependencies, and cross-platform scripts
+- `README.md`: This document
+- `test-mcp-client.js`: MCP Client integration test script
+- `tsconfig.json`: TypeScript configuration
+- `sample_config.json`: Example MCP Client configuration
 
-- `src/index.ts`: Implementação principal do servidor MCP, ferramentas e resources
-- `package.json`: Configuração do projeto, dependências e scripts multiplataforma
-- `README.md`: Este documento
-- `test-mcp-client.js`: Script de teste de integração MCP Client
-- `tsconfig.json`: Configuração TypeScript
-- `sample_config.json`: Exemplo de configuração MCP Client
+## How to configure MCP Client to use this server
 
-## Como configurar o MCP Client para usar este servidor
-
-Adicione a seguinte configuração ao seu arquivo de servidores MCP (exemplo para `sample_config.json`):
+Add the following configuration to your MCP servers file (example for `sample_config.json`):
 
 ```json
 {
@@ -51,423 +44,449 @@ Adicione a seguinte configuração ao seu arquivo de servidores MCP (exemplo par
 }
 ```
 
-Isso permite rodar o servidor de imagens diretamente via npx, sem instalação prévia, e já define a variável de ambiente necessária para autenticação na OpenAI.
+This allows you to run the image server directly via npx, with no prior installation, and sets the required environment variable for OpenAI authentication.
 
-## Como rodar localmente
+## How to run locally
 
-1. Instale as dependências:
+1. Install dependencies:
 
    ```sh
    npm install
    ```
 
-2. Compile o projeto:
+2. Build the project:
 
    ```sh
    npm run build
    ```
 
-3. Defina a variável de ambiente `OPENAI_API_KEY` com sua chave da OpenAI:
+3. Set the `OPENAI_API_KEY` environment variable with your OpenAI key:
 
-   - No Windows (PowerShell):
-
-     ```sh
-     $env:OPENAI_API_KEY="sua-chave-aqui"
-     ```
-
-   - No Linux/Mac:
+   - On Windows (PowerShell):
 
      ```sh
-     export OPENAI_API_KEY="sua-chave-aqui"
+     $env:OPENAI_API_KEY="your-key-here"
      ```
 
-4. Execute via npx:
+   - On Linux/Mac:
+
+     ```sh
+     export OPENAI_API_KEY="your-key-here"
+     ```
+
+4. Run via npx:
 
    ```sh
    npx mcp-image-server
    ```
 
- 
+## How to submit to MCP.so
 
-## Como submeter ao MCP.so
+1. Make sure the project is built, tested, and documented
+2. Follow the submission instructions at [https://mcp.so/](https://mcp.so/)
 
-1. Certifique-se de que o projeto está buildado, testado e documentado
-2. Siga as instruções de submissão em [https://mcp.so/](https://mcp.so/)
+## Progress and Documentation
 
- 
-
-## Progresso e Documentação
-
-- [x] Estrutura inicial do projeto
-- [x] Implementação do servidor MCP
-- [x] Integração real com DALL-E 3
-- [x] Conversão e entrega de arquivos nos formatos `.png`, `.svg`, `.ico`
-- [x] Ferramentas MCP documentadas e anotadas
-- [x] Resource de exemplos de uso (`resource://tool-examples`)
-- [x] Resource de formatos suportados (`formats://supported`)
-- [x] Testes de integração com MCP Client
-- [ ] Testes automatizados e validação de edge cases
-- [ ] Documentação final detalhada (exemplos, troubleshooting)
+- [x] Initial project structure
+- [x] MCP server implementation
+- [x] Real DALL-E 3 integration
+- [x] Conversion and delivery of files in `.png`, `.svg`, `.ico` formats
+- [x] MCP tools documented and annotated
+- [x] Usage examples resource (`resource://tool-examples`)
+- [x] Supported formats resource (`formats://supported`)
+- [x] Integration tests with MCP Client
+- [ ] Automated tests and edge case validation
+- [ ] Final detailed documentation (examples, troubleshooting)
 
 ---
 
-## Exemplos Visuais
+## Visual Examples
 
-Abaixo estão exemplos reais de imagens geradas pelas ferramentas do MCP Image Server. Todas as imagens foram salvas automaticamente na pasta `examples/` utilizando os parâmetros `fileName` e `directory` das ferramentas.
+Below are real examples of images generated by the MCP Image Server tools. All images were automatically saved in the `examples/` folder using the `fileName` and `directory` parameters of the tools.
 
-### Exemplo 1: Ícone de foguete minimalista (PNG)
+### Example 1: Minimalist rocket icon (PNG)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "ícone de foguete minimalista fundo transparente",
+  "prompt": "minimalist rocket icon transparent background",
   "format": "png",
-  "fileName": "icone-foguete",
+  "fileName": "rocket-icon",
   "directory": "examples"
 }
 ```
-Resultado:
 
-![Ícone de foguete minimalista](examples/icone-foguete.png)
+Result:
+
+![Minimalist rocket icon](examples/icone-foguete.png)
 
 ---
 
-### Exemplo 2: Logo circular azul com letra A (SVG)
+### Example 2: Blue circular logo with letter A (SVG)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "logo circular azul com letra A",
+  "prompt": "blue circular logo with letter A",
   "format": "svg",
-  "fileName": "logo-azul-letra-a",
+  "fileName": "blue-logo-letter-a",
   "directory": "examples"
 }
 ```
-Resultado:
 
-<img src="examples/logo-azul-letra-a.svg" alt="Logo circular azul com letra A" width="128" />
+Result:
+
+![Blue circular logo with letter A](examples/logo-azul-letra-a.svg)
 
 ---
 
-### Exemplo 3: Ícone de estrela dourada (ICO)
+### Example 3: Golden star icon (ICO)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "ícone de estrela dourada",
+  "prompt": "golden star icon",
   "format": "ico",
-  "fileName": "estrela-dourada",
+  "fileName": "golden-star",
   "directory": "examples"
 }
 ```
-Resultado:
 
-<img src="examples/estrela-dourada.ico" alt="Ícone de estrela dourada" width="64" />
+Result:
+
+![Golden star icon](examples/estrela-dourada.ico)
 
 ---
 
-### Exemplo 4: Favicon de estrela amarela (ICO)
+### Example 4: Yellow star favicon (ICO)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "favicon de estrela amarela fundo transparente",
-  "fileName": "favicon-estrela-amarela",
+  "prompt": "yellow star favicon transparent background",
+  "fileName": "yellow-star-favicon",
   "directory": "examples"
 }
 ```
-Resultado:
 
-<img src="examples/favicon-estrela-amarela.ico" alt="Favicon de estrela amarela" width="32" />
+Result:
+
+![Yellow star favicon](examples/favicon-estrela-amarela.ico)
 
 ---
 
-### Exemplo 5: Ícone de coração vermelho (SVG)
+### Example 5: Red heart icon (SVG)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "ícone de coração vermelho",
-  "fileName": "icone-coracao-vermelho",
+  "prompt": "red heart icon",
+  "fileName": "red-heart-icon",
   "directory": "examples"
 }
 ```
-Resultado:
 
-<img src="examples/icone-coracao-vermelho.svg" alt="Ícone de coração vermelho" width="64" />
+Result:
+
+![Red heart icon](examples/icone-coracao-vermelho.svg)
 
 ---
 
-Esses exemplos demonstram a flexibilidade do servidor para gerar e salvar imagens customizadas em diferentes formatos e diretórios, facilitando a integração em projetos web, aplicativos e sistemas diversos.
+These examples demonstrate the server's flexibility to generate and save custom images in different formats and directories, facilitating integration into web projects, applications, and various systems.
 
-## Ferramentas Disponíveis
+## Available Tools
 
 ### `generate-image`
-Gera uma imagem customizada usando IA (DALL-E 3) e entrega no formato solicitado.
 
-**Parâmetros:**
-- `prompt` (string): descrição textual da imagem desejada
-- `format` ("png" | "svg" | "ico"): formato de saída (padrão: "png")
+Generates a custom image using AI (DALL-E 3) and delivers it in the requested format.
 
-**Exemplo:**
+**Parameters:**
+
+- `prompt` (string): textual description of the desired image
+- `format` ("png" | "svg" | "ico"): output format (default: "png")
+
+**Example:**
 
 ```json
 {
-  "prompt": "ícone de foguete minimalista fundo transparente",
+  "prompt": "minimalist rocket icon transparent background",
   "format": "png"
 }
 ```
 
 ```json
 {
-  "prompt": "logo circular azul com letra A",
+  "prompt": "blue circular logo with letter A",
   "format": "svg"
 }
 ```
 
 ```json
 {
-  "prompt": "ícone de estrela dourada",
+  "prompt": "golden star icon",
   "format": "ico"
 }
 ```
 
 ### `generate-favicon`
-Gera um favicon.ico customizado a partir de um prompt textual.
 
-**Parâmetros:**
-- `prompt` (string): descrição textual do favicon
+Generates a custom favicon.ico from a textual prompt.
 
-**Exemplo:**
+**Parameters:**
+
+- `prompt` (string): textual description of the favicon
+
+**Example:**
 
 ```json
 {
-  "prompt": "favicon de estrela amarela fundo transparente"
+  "prompt": "yellow star favicon transparent background"
 }
 ```
 
 ### `generate-svg`
-Gera um arquivo SVG com a imagem IA embutida (base64).
 
-**Parâmetros:**
-- `prompt` (string): descrição textual da imagem desejada
+Generates an SVG file with the embedded AI image (base64).
 
-**Exemplo:**
+**Parameters:**
+
+- `prompt` (string): textual description of the desired image
+
+**Example:**
 
 ```json
 {
-  "prompt": "ícone de coração vermelho"
+  "prompt": "red heart icon"
 }
 ```
 
 ## Resources
 
-- `resource://tool-examples`: exemplos de uso das ferramentas em JSON
-- `formats://supported`: lista de formatos suportados (["png", "svg", "ico"])
+- `resource://tool-examples`: usage examples of the tools in JSON
+- `formats://supported`: list of supported formats (["png", "svg", "ico"])
 
-## Variáveis de Ambiente
+## Environment Variables
 
-- `OPENAI_API_KEY`: chave de API da OpenAI (obrigatória para geração de imagens)
+- `OPENAI_API_KEY`: OpenAI API key (required for image generation)
 
 ## Troubleshooting
 
-- **Erro OPENAI_API_KEY não definida ou inválida**: defina corretamente a variável de ambiente antes de executar.
-- **Erro ao gerar imagem DALL-E**: verifique sua chave, conexão e limites da OpenAI.
-- **Problemas de permissão no Windows**: o projeto é multiplataforma, mas se houver erro de permissão, execute o terminal como administrador.
+- **Error OPENAI_API_KEY not defined or invalid**: correctly set the environment variable before running.
+- **Error generating DALL-E image**: check your key, connection, and OpenAI limits.
+- **Permission issues on Windows**: the project is cross-platform, but if permission errors occur, run the terminal as administrator.
 
 ---
 
-> Desenvolvido seguindo as melhores práticas para agentes MCP, pronto para integração e publicação no MCP.so.
+> Developed following best practices for MCP agents, ready for integration and publication on MCP.so.
 
 ---
 
-## Exemplos Avançados de Geração de Imagens
+## Advanced Image Generation Examples
 
-A seguir, exemplos adicionais que demonstram a flexibilidade e poder das ferramentas deste projeto. Todas as imagens são geradas e salvas automaticamente na pasta `examples/`.
+Below are additional examples demonstrating the flexibility and power of the tools in this project. All images are generated and automatically saved in the `examples/` folder.
 
-### Exemplo 6: Avatar de robô simpático (PNG)
+### Example 6: Friendly robot avatar (PNG)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "avatar de robô simpático, fundo branco, estilo cartoon, cores suaves",
+  "prompt": "friendly robot avatar, white background, cartoon style, soft colors",
   "format": "png",
-  "fileName": "avatar-robo-simpatico",
+  "fileName": "friendly-robot-avatar",
   "directory": "examples"
 }
 ```
-Resultado:
 
-![Avatar de robô simpático](examples/avatar-robo-simpatico.png)
+Result:
+
+![Friendly robot avatar](examples/avatar-robo-simpatico.png)
 
 ---
 
-### Exemplo 7: Paisagem futurista com montanhas (PNG)
+### Example 7: Futuristic landscape with mountains (PNG)
 
-Prompt utilizado:
+Prompt used:
+
 ```json
 {
-  "prompt": "paisagem futurista com montanhas e céu estrelado, arte digital, fundo transparente",
+  "prompt": "futuristic landscape with mountains and starry sky, digital art, transparent background",
   "format": "png",
-  "fileName": "paisagem-futurista",
+  "fileName": "futuristic-landscape",
   "directory": "examples"
 }
 ```
-Resultado:
 
-![Paisagem futurista com montanhas](examples/paisagem-futurista.png)
+Result:
+
+![Futuristic landscape with mountains](examples/paisagem-futurista.png)
 
 ---
 
-Esses exemplos avançados mostram como o MCP Image Server pode ser utilizado para gerar desde ícones minimalistas até ilustrações complexas, prontos para uso em aplicações web, mobile ou desktop.
+These advanced examples show how the MCP Image Server can be used to generate everything from minimalist icons to complex illustrations, ready for use in web, mobile, or desktop applications.
 
-## Documentação das Ferramentas
+## Tool Documentation
 
 ### generate-image
-Gera uma imagem customizada usando IA (DALL-E 3) e salva no formato solicitado.
 
-**Parâmetros obrigatórios:**
-- `prompt` (string): descrição textual da imagem desejada
-- `format` ("png" | "svg" | "ico"): formato de saída (padrão: "png")
-- `fileName` (string): nome do arquivo a ser salvo (sem extensão)
-- `directory` (string): caminho completo do diretório onde o arquivo será salvo (deve ser formatado conforme o sistema operacional, por exemplo: `C:\Users\usuario\projeto\pasta` no Windows ou `/home/usuario/projeto/pasta` no Linux/Mac)
+Generates a custom image using AI (DALL-E 3) and saves it in the requested format.
 
-> **Importante:** Sempre informe o caminho completo no parâmetro `directory` para garantir que o arquivo seja salvo corretamente. O caminho deve estar no formato do sistema operacional onde o servidor está rodando.
+**Required Parameters:**
 
-**Exemplo de uso (Windows):**
+- `prompt` (string): textual description of the desired image
+- `format` ("png" | "svg" | "ico"): output format (default: "png")
+- `fileName` (string): name of the file to be saved (without extension)
+- `directory` (string): full path of the directory where the file will be saved (must be formatted according to the operating system, e.g., `C:\Users\user\project\folder` on Windows or `/home/user/project/folder` on Linux/Mac)
+
+> **Important:** Always provide the full path in the `directory` parameter to ensure the file is saved correctly. The path must be in the format of the operating system where the server is running.
+
+**Usage Example (Windows):**
+
 ```json
 {
-  "prompt": "ícone de foguete minimalista fundo transparente",
+  "prompt": "minimalist rocket icon transparent background",
   "format": "png",
-  "fileName": "icone-foguete",
+  "fileName": "rocket-icon",
   "directory": "c:\\Users\\ricar\\Desktop\\projetos\\mcp-image-server\\examples"
 }
 ```
 
-**Exemplo de uso (Linux/Mac):**
+**Usage Example (Linux/Mac):**
+
 ```json
 {
-  "prompt": "ícone de foguete minimalista fundo transparente",
+  "prompt": "minimalist rocket icon transparent background",
   "format": "png",
-  "fileName": "icone-foguete",
-  "directory": "/home/usuario/projetos/mcp-image-server/examples"
+  "fileName": "rocket-icon",
+  "directory": "/home/user/projects/mcp-image-server/examples"
 }
 ```
 
 ### generate-favicon
-Gera um favicon.ico customizado a partir de um prompt textual.
 
-**Parâmetros obrigatórios:**
-- `prompt` (string): descrição textual do favicon
-- `fileName` (string): nome do arquivo a ser salvo (sem extensão)
-- `directory` (string): caminho completo do diretório onde o arquivo será salvo (formato do sistema operacional)
+Generates a custom favicon.ico from a textual prompt.
 
-**Exemplo de uso (Windows):**
+**Required Parameters:**
+
+- `prompt` (string): textual description of the favicon
+- `fileName` (string): name of the file to be saved (without extension)
+- `directory` (string): full path of the directory where the file will be saved (operating system format)
+
+**Usage Example (Windows):**
+
 ```json
 {
-  "prompt": "favicon de estrela amarela fundo transparente",
-  "fileName": "favicon-estrela-amarela",
+  "prompt": "yellow star favicon transparent background",
+  "fileName": "yellow-star-favicon",
   "directory": "c:\\Users\\ricar\\Desktop\\projetos\\mcp-image-server\\examples"
 }
 ```
 
 ### generate-svg
-Gera um arquivo SVG com a imagem IA embutida (base64).
 
-**Parâmetros obrigatórios:**
-- `prompt` (string): descrição textual da imagem desejada
-- `fileName` (string): nome do arquivo a ser salvo (sem extensão)
-- `directory` (string): caminho completo do diretório onde o arquivo será salvo (formato do sistema operacional)
+Generates an SVG file with the embedded AI image (base64).
 
-**Exemplo de uso (Linux/Mac):**
+**Required Parameters:**
+
+- `prompt` (string): textual description of the desired image
+- `fileName` (string): name of the file to be saved (without extension)
+- `directory` (string): full path of the directory where the file will be saved (operating system format)
+
+**Usage Example (Linux/Mac):**
+
 ```json
 {
-  "prompt": "ícone de coração vermelho",
-  "fileName": "icone-coracao-vermelho",
-  "directory": "/home/usuario/projetos/mcp-image-server/examples"
+  "prompt": "red heart icon",
+  "fileName": "red-heart-icon",
+  "directory": "/home/user/projects/mcp-image-server/examples"
 }
 ```
 
-> Consulte o resource `resource://tool-examples` para mais exemplos práticos em JSON.
+> Refer to the resource `resource://tool-examples` for more practical JSON examples.
 
 ---
 
-## Como as ferramentas MCP são implementadas e documentadas
+## How MCP Tools Are Implemented and Documented
 
-As ferramentas MCP (Model Context Protocol) devem seguir o padrão internacional para definição e documentação, permitindo que modelos e agentes as descubram, compreendam e utilizem corretamente. Veja abaixo as melhores práticas e exemplos reais:
+MCP (Model Context Protocol) tools must follow the international standard for definition and documentation, allowing models and agents to discover, understand, and use them correctly. See below for best practices and real examples:
 
-### Estrutura de definição de uma ferramenta MCP
+### MCP Tool Definition Structure
 
 ```typescript
 {
-  name: string;          // Identificador único da ferramenta
-  description?: string;  // Descrição legível para humanos
-  inputSchema: {         // JSON Schema dos parâmetros da ferramenta
+  name: string;          // Unique identifier of the tool
+  description?: string;  // Human-readable description
+  inputSchema: {         // JSON Schema of the tool parameters
     type: "object",
-    properties: { ... }  // Parâmetros específicos da ferramenta
+    properties: { ... }  // Specific tool parameters
   }
 }
 ```
 
-- **name**: nome único da ferramenta (ex: "generate-image")
-- **description**: descrição clara do que a ferramenta faz
-- **inputSchema**: define os parâmetros obrigatórios e opcionais, tipos e descrições
+- **name**: unique name of the tool (e.g., "generate-image")
+- **description**: clear description of what the tool does
+- **inputSchema**: defines required and optional parameters, types, and descriptions
 
-### Exemplo prático (TypeScript)
+### Practical Example (TypeScript)
 
 ```typescript
 server.registerTool(
   "generate-image",
   {
-    title: "Gerar Imagem com DALL-E",
-    description: "Gera uma imagem customizada usando IA (DALL-E 3) e entrega no formato solicitado (.png, .svg, .ico).",
+    title: "Generate Image with DALL-E",
+    description: "Generates a custom image using AI (DALL-E 3) and delivers it in the requested format (.png, .svg, .ico).",
     inputSchema: {
-      prompt: z.string().describe("Prompt textual descrevendo a imagem desejada"),
-      format: z.enum(["png", "svg", "ico"]).default("png").describe("Formato de saída da imagem"),
-      fileName: z.string().default("image").describe("Nome do arquivo a ser salvo (sem extensão)"),
-      directory: z.string().default("./output").describe("Diretório onde o arquivo será salvo")
+      prompt: z.string().describe("Textual prompt describing the desired image"),
+      format: z.enum(["png", "svg", "ico"]).default("png").describe("Output format of the image"),
+      fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
+      directory: z.string().default("./output").describe("Directory where the file will be saved")
     },
     annotations: {
-      usage: "Use esta ferramenta para gerar imagens e ícones customizados para seu projeto. O prompt deve ser detalhado para melhores resultados. O formato define a extensão do arquivo gerado."
+      usage: "Use this tool to generate custom images and icons for your project. The prompt should be detailed for better results. The format defines the extension of the generated file."
     }
   },
   async ({ prompt, format, fileName, directory }) => { /* ... */ }
 );
 ```
 
-### Boas práticas para documentação de ferramentas
+### Best Practices for Tool Documentation
 
-- Sempre inclua uma descrição clara e objetiva
-- Documente todos os parâmetros do inputSchema, incluindo tipos e exemplos
-- Forneça exemplos de uso em JSON para cada ferramenta
-- Utilize o campo `annotations.usage` para dicas de uso e contexto
-- Implemente tratamento de erro robusto, retornando mensagens amigáveis e o campo `isError` quando necessário
+- Always include a clear and objective description
+- Document all inputSchema parameters, including types and examples
+- Provide JSON usage examples for each tool
+- Use the `annotations.usage` field for usage tips and context
+- Implement robust error handling, returning friendly messages and the `isError` field when necessary
 
-### Exemplo de tratamento de erro
+### Error Handling Example
 
 ```typescript
 try {
-  // Operação da ferramenta
+  // Tool operation
   const result = performOperation();
   return {
     content: [
-      { type: "text", text: `Operação realizada com sucesso: ${result}` }
+      { type: "text", text: `Operation successful: ${result}` }
     ]
   };
 } catch (error) {
   return {
     isError: true,
     content: [
-      { type: "text", text: `Erro: ${error.message}` }
+      { type: "text", text: `Error: ${error.message}` }
     ]
   };
 }
 ```
 
-### Descoberta e uso automático por modelos
+### Automatic Discovery and Use by Models
 
-Ao seguir esse padrão, qualquer modelo ou agente MCP pode listar as ferramentas disponíveis, ler seus schemas e descrições, e invocá-las corretamente, inclusive com validação automática de parâmetros.
+By following this standard, any MCP model or agent can list the available tools, read their schemas and descriptions, and invoke them correctly, including automatic parameter validation.
 
-> Consulte a [documentação oficial do MCP](https://github.com/modelcontextprotocol/docs/blob/main/docs/concepts/tools.mdx) para mais exemplos e detalhes.
+> Refer to the [official MCP documentation](https://github.com/modelcontextprotocol/docs/blob/main/docs/concepts/tools.mdx) for more examples and details.
 
 ---

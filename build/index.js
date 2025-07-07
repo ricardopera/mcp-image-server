@@ -7,10 +7,10 @@ import pngToIco from "png-to-ico";
 import fs from "fs";
 import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
-// Função para gerar imagem PNG via DALL-E (OpenAI)
+// Function to generate PNG image via DALL-E (OpenAI)
 async function generateImageDalle(prompt) {
     if (!OPENAI_API_KEY || OPENAI_API_KEY.length < 10) {
-        throw new Error("OPENAI_API_KEY não definida ou inválida. Defina a variável de ambiente corretamente.");
+        throw new Error("OPENAI_API_KEY not defined or invalid. Set the environment variable correctly.");
     }
     const response = await fetch("https://api.openai.com/v1/images/generations", {
         method: "POST",
@@ -27,7 +27,7 @@ async function generateImageDalle(prompt) {
         })
     });
     if (!response.ok) {
-        let msg = `Erro ao gerar imagem DALL-E (HTTP ${response.status})`;
+        let msg = `Error generating DALL-E image (HTTP ${response.status})`;
         try {
             const err = await response.json();
             if (typeof err === 'object' && err && 'error' in err && typeof err.error === 'object' && err.error && 'message' in err.error) {
@@ -39,45 +39,45 @@ async function generateImageDalle(prompt) {
     }
     const data = await response.json();
     if (!data || typeof data !== 'object' || !('data' in data) || !Array.isArray(data.data) || !data.data[0] || !('b64_json' in data.data[0])) {
-        throw new Error("Resposta inesperada da API DALL-E");
+        throw new Error("Unexpected response from DALL-E API");
     }
     const b64 = data.data[0].b64_json;
     return Buffer.from(b64, "base64");
 }
-// Função para converter PNG para outros formatos (PNG, SVG, ICO)
+// Function to convert PNG to other formats (PNG, SVG, ICO)
 async function convertImage(buffer, format) {
     if (format === "png") {
         return { buffer, mimeType: "image/png", ext: "png" };
     }
     if (format === "ico") {
-        // Converte PNG para ICO usando png-to-ico
+        // Convert PNG to ICO using png-to-ico
         const icoBuffer = await pngToIco(buffer);
         return { buffer: icoBuffer, mimeType: "image/x-icon", ext: "ico" };
     }
     if (format === "svg") {
-        // Embute o PNG como base64 em um SVG
+        // Embed PNG as base64 in an SVG
         const b64 = buffer.toString("base64");
         const svg = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1024\" height=\"1024\"><image href=\"data:image/png;base64,${b64}\" width=\"1024\" height=\"1024\"/></svg>`;
         return { buffer: Buffer.from(svg, "utf-8"), mimeType: "image/svg+xml", ext: "svg" };
     }
-    throw new Error("Formato não suportado: " + format);
+    throw new Error("Unsupported format: " + format);
 }
 const server = new McpServer({
     name: "mcp-image-server",
     version: "1.0.0"
 });
-// Tool: Geração de imagem customizada
+// Tool: Custom image generation
 server.registerTool("generate-image", {
-    title: "Gerar Imagem com DALL-E",
-    description: "Gera uma imagem customizada usando IA (DALL-E 3) e entrega no formato solicitado (.png, .svg, .ico).",
+    title: "Generate Image with DALL-E",
+    description: "Generates a custom image using AI (DALL-E 3) and delivers it in the requested format (.png, .svg, .ico).",
     inputSchema: {
-        prompt: z.string().describe("Prompt textual descrevendo a imagem desejada (ex: 'ícone de foguete minimalista fundo transparente')"),
-        format: z.enum(["png", "svg", "ico"]).default("png").describe("Formato de saída da imagem: png, svg ou ico"),
-        fileName: z.string().default("image").describe("Nome do arquivo a ser salvo (sem extensão)"),
-        directory: z.string().default("./output").describe("Caminho completo do diretório onde o arquivo será salvo. O caminho deve ser absoluto e formatado para o SO do servidor (ex: 'C:\\Users\\user\\project' no Windows, '/home/user/project' no Linux).")
+        prompt: z.string().describe("Textual prompt describing the desired image (e.g., 'minimalist rocket icon transparent background')"),
+        format: z.enum(["png", "svg", "ico"]).default("png").describe("Output format of the image: png, svg, or ico"),
+        fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
+        directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
     annotations: {
-        usage: "Use esta ferramenta para gerar imagens e ícones customizados para seu projeto. O prompt deve ser detalhado para melhores resultados. O formato define a extensão do arquivo gerado."
+        usage: "Use this tool to generate custom images and icons for your project. The prompt should be detailed for better results. The format defines the extension of the generated file."
     }
 }, async ({ prompt, format, fileName, directory }) => {
     try {
@@ -111,7 +111,7 @@ server.registerTool("generate-image", {
         }
     }
     catch (err) {
-        let msg = "Erro ao gerar imagem DALL-E";
+        let msg = "Error generating DALL-E image";
         if (err instanceof Error)
             msg += ": " + err.message;
         return {
@@ -122,17 +122,17 @@ server.registerTool("generate-image", {
         };
     }
 });
-// Tool: Gerar favicon.ico a partir de prompt
+// Tool: Generate favicon.ico from prompt
 server.registerTool("generate-favicon", {
-    title: "Gerar Favicon (.ico)",
-    description: "Gera um favicon.ico customizado a partir de um prompt textual usando IA (DALL-E 3).",
+    title: "Generate Favicon (.ico)",
+    description: "Generates a custom favicon.ico from a textual prompt using AI (DALL-E 3).",
     inputSchema: {
-        prompt: z.string().describe("Prompt textual descrevendo o favicon desejado (ex: 'favicon de estrela amarela fundo transparente')"),
-        fileName: z.string().default("favicon").describe("Nome do arquivo a ser salvo (sem extensão)"),
-        directory: z.string().default("./output").describe("Caminho completo do diretório onde o arquivo será salvo. O caminho deve ser absoluto e formatado para o SO do servidor (ex: 'C:\\Users\\user\\project' no Windows, '/home/user/project' no Linux).")
+        prompt: z.string().describe("Textual prompt describing the desired favicon (e.g., 'yellow star favicon transparent background')"),
+        fileName: z.string().default("favicon").describe("Name of the file to be saved (without extension)"),
+        directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
     annotations: {
-        usage: "Use esta ferramenta para gerar um favicon.ico pronto para sites e aplicações."
+        usage: "Use this tool to generate a favicon.ico ready for websites and applications."
     }
 }, async ({ prompt, fileName, directory }) => {
     try {
@@ -153,7 +153,7 @@ server.registerTool("generate-favicon", {
         };
     }
     catch (err) {
-        let msg = "Erro ao gerar favicon.ico";
+        let msg = "Error generating favicon.ico";
         if (err instanceof Error)
             msg += ": " + err.message;
         return {
@@ -164,17 +164,17 @@ server.registerTool("generate-favicon", {
         };
     }
 });
-// Tool: Gerar SVG com imagem embutida
+// Tool: Generate SVG with embedded image
 server.registerTool("generate-svg", {
-    title: "Gerar SVG com imagem IA",
-    description: "Gera um arquivo SVG com a imagem gerada por IA embutida (base64).",
+    title: "Generate SVG with AI Image",
+    description: "Generates an SVG file with the embedded AI image (base64).",
     inputSchema: {
-        prompt: z.string().describe("Prompt textual descrevendo a imagem desejada para SVG"),
-        fileName: z.string().default("image").describe("Nome do arquivo a ser salvo (sem extensão)"),
-        directory: z.string().default("./output").describe("Caminho completo do diretório onde o arquivo será salvo. O caminho deve ser absoluto e formatado para o SO do servidor (ex: 'C:\\Users\\user\\project' no Windows, '/home/user/project' no Linux).")
+        prompt: z.string().describe("Textual prompt describing the desired image for SVG"),
+        fileName: z.string().default("image").describe("Name of the file to be saved (without extension)"),
+        directory: z.string().default("./output").describe("Full path of the directory where the file will be saved. The path must be absolute and formatted for the server's OS (e.g., 'C:\\Users\\user\\project' on Windows, '/home/user/project' on Linux).")
     },
     annotations: {
-        usage: "Use para gerar SVGs prontos para web, com a imagem IA embutida."
+        usage: "Use this tool to generate SVGs ready for the web, with the embedded AI image."
     }
 }, async ({ prompt, fileName, directory }) => {
     try {
@@ -195,7 +195,7 @@ server.registerTool("generate-svg", {
         };
     }
     catch (err) {
-        let msg = "Erro ao gerar SVG";
+        let msg = "Error generating SVG";
         if (err instanceof Error)
             msg += ": " + err.message;
         return {
@@ -206,10 +206,10 @@ server.registerTool("generate-svg", {
         };
     }
 });
-// Resource: exemplos de uso das ferramentas
+// Resource: Tool usage examples
 server.registerResource("tool-examples", "resource://tool-examples", {
-    title: "Exemplos de Uso das Ferramentas",
-    description: "Exemplos práticos de uso das ferramentas disponíveis neste servidor MCP.",
+    title: "Tool Usage Examples",
+    description: "Practical examples of using the tools available in this MCP server.",
     mimeType: "application/json"
 }, async (uri) => {
     return {
@@ -218,38 +218,38 @@ server.registerResource("tool-examples", "resource://tool-examples", {
                 text: JSON.stringify({
                     "generate-image": [
                         {
-                            arguments: { prompt: "ícone de foguete minimalista fundo transparente", format: "png" },
-                            description: "Gera um ícone de foguete em PNG."
+                            arguments: { prompt: "minimalist rocket icon transparent background", format: "png" },
+                            description: "Generates a rocket icon in PNG."
                         },
                         {
-                            arguments: { prompt: "ícone de estrela dourada", format: "ico" },
-                            description: "Gera um ícone de estrela dourada em formato .ico."
+                            arguments: { prompt: "golden star icon", format: "ico" },
+                            description: "Generates a golden star icon in .ico format."
                         },
                         {
-                            arguments: { prompt: "logo circular azul com letra A", format: "svg" },
-                            description: "Gera um logo circular azul com letra A em SVG."
+                            arguments: { prompt: "blue circular logo with letter A", format: "svg" },
+                            description: "Generates a blue circular logo with letter A in SVG."
                         }
                     ],
                     "generate-favicon": [
                         {
-                            arguments: { prompt: "favicon de estrela amarela fundo transparente" },
-                            description: "Gera um favicon de estrela amarela."
+                            arguments: { prompt: "yellow star favicon transparent background" },
+                            description: "Generates a yellow star favicon."
                         }
                     ],
                     "generate-svg": [
                         {
-                            arguments: { prompt: "ícone de coração vermelho" },
-                            description: "Gera um SVG com ícone de coração vermelho."
+                            arguments: { prompt: "red heart icon" },
+                            description: "Generates an SVG with a red heart icon."
                         }
                     ]
                 }, null, 2)
             }]
     };
 });
-// Resource: lista de formatos suportados
+// Resource: List of supported formats
 server.registerResource("supported-formats", "formats://supported", {
-    title: "Formatos Suportados",
-    description: "Lista de formatos de imagem suportados pelo servidor.",
+    title: "Supported Formats",
+    description: "List of image formats supported by the server.",
     mimeType: "application/json"
 }, async (uri) => ({
     contents: [{
@@ -257,6 +257,6 @@ server.registerResource("supported-formats", "formats://supported", {
             text: JSON.stringify(["png", "svg", "ico"])
         }]
 }));
-// Inicializa o transporte MCP (STDIO para npx)
+// Initialize MCP transport (STDIO for npx)
 const transport = new StdioServerTransport();
 server.connect(transport);
