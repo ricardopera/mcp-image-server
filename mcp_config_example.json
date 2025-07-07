@@ -1,6 +1,6 @@
 {
     "servers": {
-            "image-server": {
+            "mcp-image-server": {
                 "type": "stdio",
                 "command": "npx",
                 "args": [

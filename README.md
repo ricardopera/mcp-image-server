@@ -36,7 +36,7 @@ Adicione a seguinte configuração ao seu arquivo de servidores MCP (exemplo par
 ```json
 {
     "servers": {
-        "image-server": {
+        "mcp-image-server": {
             "type": "stdio",
             "command": "npx",
             "args": [
