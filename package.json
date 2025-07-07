@@ -1,14 +1,14 @@
 {
   "name": "@ricardopera/mcp-image-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "mcp-image-server": "build/index.js"
+    "mcp-image-server": "./build/index.js"
   },
   "scripts": {
     "test": "node --test || jest",
-    "build": "tsc && chmod 755 build/index.js",
+    "build": "tsc && (echo #!/usr/bin/env node> build/index.js.tmp && type build/index.js >> build/index.js.tmp && move /Y build/index.js.tmp build/index.js) && chmod 755 build/index.js",
     "start": "node build/index.js"
   },
   "repository": {
