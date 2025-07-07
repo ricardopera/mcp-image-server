@@ -1,8 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import sharp from "sharp";
 import pngToIco from "png-to-ico";
+import fs from "fs";
+import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 // Função para gerar imagem PNG via DALL-E (OpenAI)
 async function generateImageDalle(prompt) {
@@ -41,24 +42,23 @@ async function generateImageDalle(prompt) {
     const b64 = data.data[0].b64_json;
     return Buffer.from(b64, "base64");
 }
-// Função para converter PNG para outros formatos
+// Função para converter PNG para outros formatos (PNG, SVG, ICO)
 async function convertImage(buffer, format) {
     if (format === "png") {
-        return { buffer, mimeType: "image/png" };
+        return { buffer, mimeType: "image/png", ext: "png" };
     }
     if (format === "ico") {
-        // Gera .ico real a partir do PNG
-        const resizedPng = await sharp(buffer).resize(256, 256).png().toBuffer();
-        const icoBuffer = await pngToIco(resizedPng);
-        return { buffer: icoBuffer, mimeType: "image/x-icon" };
+        // Converte PNG para ICO usando png-to-ico
+        const icoBuffer = await pngToIco(buffer);
+        return { buffer: icoBuffer, mimeType: "image/x-icon", ext: "ico" };
     }
     if (format === "svg") {
-        // Gera SVG com a imagem PNG embutida em base64
-        const base64 = buffer.toString("base64");
-        const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 1024 1024'><image href='data:image/png;base64,${base64}' width='1024' height='1024'/></svg>`;
-        return { buffer: Buffer.from(svg, "utf-8"), mimeType: "image/svg+xml" };
+        // Embute o PNG como base64 em um SVG
+        const b64 = buffer.toString("base64");
+        const svg = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1024\" height=\"1024\"><image href=\"data:image/png;base64,${b64}\" width=\"1024\" height=\"1024\"/></svg>`;
+        return { buffer: Buffer.from(svg, "utf-8"), mimeType: "image/svg+xml", ext: "svg" };
     }
-    throw new Error("Formato não suportado");
+    throw new Error("Formato não suportado: " + format);
 }
 const server = new McpServer({
     name: "mcp-image-server",
@@ -70,25 +70,43 @@ server.registerTool("generate-image", {
     description: "Gera uma imagem customizada usando IA (DALL-E 3) e entrega no formato solicitado (.png, .svg, .ico).",
     inputSchema: {
         prompt: z.string().describe("Prompt textual descrevendo a imagem desejada (ex: 'ícone de foguete minimalista fundo transparente')"),
-        format: z.enum(["png", "svg", "ico"]).default("png").describe("Formato de saída da imagem: png, svg ou ico")
+        format: z.enum(["png", "svg", "ico"]).default("png").describe("Formato de saída da imagem: png, svg ou ico"),
+        fileName: z.string().default("image").describe("Nome do arquivo a ser salvo (sem extensão)"),
+        directory: z.string().default("./output").describe("Caminho completo do diretório onde o arquivo será salvo. O caminho deve ser absoluto e formatado para o SO do servidor (ex: 'C:\\Users\\user\\project' no Windows, '/home/user/project' no Linux).")
     },
     annotations: {
         usage: "Use esta ferramenta para gerar imagens e ícones customizados para seu projeto. O prompt deve ser detalhado para melhores resultados. O formato define a extensão do arquivo gerado."
     }
-}, async ({ prompt, format }) => {
+}, async ({ prompt, format, fileName, directory }) => {
     try {
         const pngBuffer = await generateImageDalle(prompt);
-        const { buffer, mimeType } = await convertImage(pngBuffer, format);
-        return {
-            content: [
-                {
-                    type: "image",
-                    data: buffer.toString("base64"),
-                    mimeType,
-                    name: `image.${format}`
-                }
-            ]
-        };
+        const { buffer, mimeType, ext } = await convertImage(pngBuffer, format);
+        const dirPath = path.resolve(directory);
+        await fs.promises.mkdir(dirPath, { recursive: true });
+        const filePath = path.join(dirPath, `${fileName}.${ext}`);
+        await fs.promises.writeFile(filePath, buffer);
+        if (ext === "svg") {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: buffer.toString("utf-8"),
+                        mimeType
+                    }
+                ]
+            };
+        }
+        else {
+            return {
+                content: [
+                    {
+                        type: "image",
+                        data: buffer.toString("base64"),
+                        mimeType
+                    }
+                ]
+            };
+        }
     }
     catch (err) {
         let msg = "Erro ao gerar imagem DALL-E";
@@ -107,28 +125,33 @@ server.registerTool("generate-favicon", {
     title: "Gerar Favicon (.ico)",
     description: "Gera um favicon.ico customizado a partir de um prompt textual usando IA (DALL-E 3).",
     inputSchema: {
-        prompt: z.string().describe("Prompt textual descrevendo o favicon desejado (ex: 'favicon de estrela amarela fundo transparente')")
+        prompt: z.string().describe("Prompt textual descrevendo o favicon desejado (ex: 'favicon de estrela amarela fundo transparente')"),
+        fileName: z.string().default("favicon").describe("Nome do arquivo a ser salvo (sem extensão)"),
+        directory: z.string().default("./output").describe("Caminho completo do diretório onde o arquivo será salvo. O caminho deve ser absoluto e formatado para o SO do servidor (ex: 'C:\\Users\\user\\project' no Windows, '/home/user/project' no Linux).")
     },
     annotations: {
         usage: "Use esta ferramenta para gerar um favicon.ico pronto para sites e aplicações."
     }
-}, async ({ prompt }) => {
+}, async ({ prompt, fileName, directory }) => {
     try {
         const pngBuffer = await generateImageDalle(prompt);
-        const { buffer, mimeType } = await convertImage(pngBuffer, "ico");
+        const { buffer, mimeType, ext } = await convertImage(pngBuffer, "ico");
+        const dirPath = path.resolve(directory);
+        await fs.promises.mkdir(dirPath, { recursive: true });
+        const filePath = path.join(dirPath, `${fileName}.ico`);
+        await fs.promises.writeFile(filePath, buffer);
         return {
             content: [
                 {
                     type: "image",
                     data: buffer.toString("base64"),
-                    mimeType,
-                    name: `favicon.ico`
+                    mimeType
                 }
             ]
         };
     }
     catch (err) {
-        let msg = "Erro ao gerar favicon";
+        let msg = "Erro ao gerar favicon.ico";
         if (err instanceof Error)
             msg += ": " + err.message;
         return {
@@ -144,22 +167,27 @@ server.registerTool("generate-svg", {
     title: "Gerar SVG com imagem IA",
     description: "Gera um arquivo SVG com a imagem gerada por IA embutida (base64).",
     inputSchema: {
-        prompt: z.string().describe("Prompt textual descrevendo a imagem desejada para SVG")
+        prompt: z.string().describe("Prompt textual descrevendo a imagem desejada para SVG"),
+        fileName: z.string().default("image").describe("Nome do arquivo a ser salvo (sem extensão)"),
+        directory: z.string().default("./output").describe("Caminho completo do diretório onde o arquivo será salvo. O caminho deve ser absoluto e formatado para o SO do servidor (ex: 'C:\\Users\\user\\project' no Windows, '/home/user/project' no Linux).")
     },
     annotations: {
         usage: "Use para gerar SVGs prontos para web, com a imagem IA embutida."
     }
-}, async ({ prompt }) => {
+}, async ({ prompt, fileName, directory }) => {
     try {
         const pngBuffer = await generateImageDalle(prompt);
-        const { buffer, mimeType } = await convertImage(pngBuffer, "svg");
+        const { buffer, mimeType, ext } = await convertImage(pngBuffer, "svg");
+        const dirPath = path.resolve(directory);
+        await fs.promises.mkdir(dirPath, { recursive: true });
+        const filePath = path.join(dirPath, `${fileName}.svg`);
+        await fs.promises.writeFile(filePath, buffer);
         return {
             content: [
                 {
-                    type: "image",
-                    data: buffer.toString("utf-8"),
-                    mimeType,
-                    name: `image.svg`
+                    type: "text",
+                    text: buffer.toString("utf-8"),
+                    mimeType
                 }
             ]
         };
